@@ -37,26 +37,24 @@
   <div id="videos"></div>
 
   <script>
-    fetch("https://qods112.blogspot.com/feeds/posts/default?alt=json")
+    fetch("https://api.rss2json.com/v1/api.json?rss_url=https://qods112.blogspot.com/feeds/posts/default")
       .then(response => response.json())
       .then(data => {
         const videosContainer = document.getElementById("videos");
-        const entries = data.feed.entry;
+        const items = data.items;
 
-        if (!entries || entries.length === 0) {
+        if (!items || items.length === 0) {
           videosContainer.innerHTML = "<p>لا توجد مقالات حالياً.</p>";
           return;
         }
 
-        entries.forEach(entry => {
-          const title = entry.title.$t;
-          const content = entry.content.$t;
+        items.forEach(item => {
+          const content = item.content;
 
-          // فقط عرض المحتوى الذي فيه iframe (أي فيه فيديو)
           if (content.includes("iframe")) {
             const div = document.createElement("div");
             div.className = "video";
-            div.innerHTML = content + `<div class="title">${title}</div>`;
+            div.innerHTML = content + `<div class="title">${item.title}</div>`;
             videosContainer.appendChild(div);
           }
         });
